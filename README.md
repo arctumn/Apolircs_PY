@@ -18,10 +18,10 @@ o client não está preparado para resizing de janelas.
 
 
 # Cliente gráfico by:
-@farsenfsd
+[@farsenfsd](https://github.com/farsenfsd)
 
 # Server by:
-@arctumn
+[@arctumn](https://github.com/arctumn)
 
 # Made by Dev_Team_Apolircs
 ```
