@@ -15,5 +15,4 @@ Não é recomendado que altere o tamanho da janela,
 o client não está preparado para resizing de janelas.
 
 
-# Made by 
-Dev_Team_Apolircs
+# Made by Dev_Team_Apolircs
