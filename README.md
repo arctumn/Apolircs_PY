@@ -2,7 +2,7 @@
 Chat de mensagens cifradras APOLIRCS
 
 # About
-Requer python 3.8+ para ser executado.
+Requer python 3.8+ para ser executado. (Testado em Manjaro 19.0)
 
 Este chat funciona com base em criptografia de chave publica.
 
