@@ -17,6 +17,12 @@ Não é recomendado que altere o tamanho da janela,
 o client não está preparado para resizing de janelas.
 
 
+# Cliente gráfico by:
+@farsenfsd
+
+# Server by:
+@arctumn
+
 # Made by Dev_Team_Apolircs
 ```
  ___ ____ _   _    _  _____ ___  
