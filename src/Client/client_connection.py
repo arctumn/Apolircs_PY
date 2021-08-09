@@ -119,7 +119,7 @@ def send_message(soc:ssl.SSLSocket, nome:str):
 
         if msg == "!pm":
             modo = 2
-            destino, listausers = menuPM(nome)
+            destino, _ = menuPM(nome)
             signature = make_key(nome,titpre)
             soc.send(f"{nome}.|||.startGROUP{destino}{titpre}.__.{signature}".encode('utf-8')) #ATENÇÃO, o for já add o .__. a seguir ao destino
             #send_hand_shake_to_group(soc,nome, listausers, titpre)
