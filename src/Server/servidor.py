@@ -178,6 +178,5 @@ def start() -> None:
             print(f"Exception: {e.args}")
 
 if __name__ == "__main__":
-    print(argv)
     start()
     

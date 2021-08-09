@@ -1,9 +1,12 @@
 import os
+import ssl
 from typing import Tuple
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 import hashlib
+
+
 
 def sign(msg:bytes,user:str) -> str:
     #debug_admin(msg.decode())
@@ -116,6 +119,31 @@ def decrypt(message:bytes,user:str) -> str:
     ).decode()
 
 
+def receive_hand_shake(group_name:str,cifred_key:bytes,signature:bytes,p_key_sign:bytes,user_name:str):
+   
+    msg = decrypt(cifred_key,user_name)
+    if verify(msg.encode(),bytes.fromhex(bytes.hex(signature)),p_key_sign) == "SUCCESS":
+        with open(f"{group_name}_shared_key.pem","w") as f:
+            f.write(msg)
+            f.close()
+
+
+def send_hand_shake_to_group(socket:ssl.SSLSocket,group_name:str,usr_pkey:bytes,signatures:str) -> None:
+    #thread_receber.pause()
+    global common_shared
+    shared_key = common_shared
+    #debug_admin("FOOOOOOOOOOOOOOOOOOOOR")
+    try:     
+        cifrado = encrypt(shared_key,usr_pkey)
+        msg = f"send_handshake.|||.{group_name}.|||.{bytes.hex(cifrado)}.|||.{signatures}"
+    except Exception as e:
+        print(e.args)
+        print("ERRORR")
+        #thread_receber.resume()
+        exit(-1)
+    socket.send(msg.encode())
+    #thread_receber.resume()
+
 # Produz uma chave comum para conversas privadas
 def make_key(from_user,group_name):
     global common_shared
@@ -127,7 +155,7 @@ def make_key(from_user,group_name):
             f.close()
     common_shared = shared_key
     return signatures
-    
+
 # Guarda as chaves do utilizador no sistema 
 def save_keys(message:str,user:str):
     with open("debug.txt","w") as f:

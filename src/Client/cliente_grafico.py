@@ -4,8 +4,13 @@ import os
 import time
 
 from client_coloring import * #coloring variables
-from client_connection import register,login
+
 pm_flag = False
+
+
+
+
+
 
 def menuPM(nome):
     global titpre
@@ -428,26 +433,4 @@ def ImprimeMensagensGuardadas(chat):
         print(e.args)
     return
 
-
-def inicio(ssock):
-    print('''
- ___ ____ _   _    _  _____ ___  
-|_ _/ ___| | | |  / \|_   _/ _ \ 
- | | |   | |_| | / _ \ | || | | |
- | | |___|  _  |/ ___ \| || |_| |
-|___\____|_| |_/_/   \_\_| \___/ ''')
-    resposta = input("\nBem-vindo ao iChato!\n" + 
-        "\n1 - Iniciar sessão" +
-        "\n2 - Registar Utilizador" +
-        "\n> ")
-    if resposta == "2":
-        nome = register(ssock)
-        print("Iniciar sessão: ")
-        login(ssock)
-    elif resposta == "1":
-        nome = login(ssock)
-    else:
-        print("Opção não reconhecida")
-        return inicio(ssock)
-    return nome
 

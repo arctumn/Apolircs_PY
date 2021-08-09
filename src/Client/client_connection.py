@@ -3,10 +3,11 @@ import time
 import ssl
 import socket
 from typing import Tuple
-from cliente_grafico import *
-from client_parsing import parse_received
-from client_crypto import common_shared ,encrypt, verify, decrypt, make_key, sign, encrypt_with_shared_key, gen_passwd, save_keys
+from cliente_grafico import startup, AddListaAmigos, calculaEspacos, AtualizaHistorico, ambienteGrafico, ImprimeMensagensGuardadas, menuPM, titpre, messageParse
+from client_parsing import receive_message
+from client_crypto import make_key, sign, encrypt_with_shared_key, gen_passwd, save_keys
 from client_coloring import *
+
 
 class Receiving(threading.Thread):
     def __init__(self, *args):
@@ -23,7 +24,6 @@ class Receiving(threading.Thread):
                     self.pause_cond.wait()
                 #thread should do the thing if
                 #not paused
-                #print(self.args)
                 receive_message(self.args[0],self.args[1])
             time.sleep(0.5)
 
@@ -41,13 +41,6 @@ class Receiving(threading.Thread):
         self.pause_cond.notify()
         # Now release the lock
         self.pause_cond.release()
-
-def receive_message(socket:ssl.SSLSocket,nome:str) -> None:
-        try:  
-            msg = socket.recv(3072)
-            parse_received(msg,nome,socket) if msg.decode() != "" else ""
-        except Exception as e:
-            print(e.args)
 
 def start() -> None:
     hostname = 'apolircs.asuscomm.com'
@@ -75,21 +68,7 @@ def start() -> None:
                 ssock.send(f"exit".encode())
                 ssock.close()
 
-def send_hand_shake_to_group(socket:ssl.SSLSocket,group_name:str,usr_pkey:bytes,signatures:str) -> None:
-    #thread_receber.pause()
-    global common_shared
-    shared_key = common_shared
-    #debug_admin("FOOOOOOOOOOOOOOOOOOOOR")
-    try:     
-        cifrado = encrypt(shared_key,usr_pkey)
-        msg = f"send_handshake.|||.{group_name}.|||.{bytes.hex(cifrado)}.|||.{signatures}"
-    except Exception as e:
-        print(e.args)
-        print("ERRORR")
-        #thread_receber.resume()
-        exit(-1)
-    socket.send(msg.encode())
-    #thread_receber.resume()
+
 
 def send_message(soc:ssl.SSLSocket, nome:str):
     global titpre
@@ -201,13 +180,6 @@ def send_message(soc:ssl.SSLSocket, nome:str):
                     #debug_admin(msg)
 
 
-def receive_hand_shake(group_name:str,cifred_key:bytes,signature:bytes,p_key_sign:bytes,user_name:str):
-   
-    msg = decrypt(cifred_key,user_name)
-    if verify(msg.encode(),bytes.fromhex(bytes.hex(signature)),p_key_sign) == "SUCCESS":
-        with open(f"{group_name}_shared_key.pem","w") as f:
-            f.write(msg)
-            f.close()
 
 def register(ssock:ssl.SSLSocket) -> Tuple:
     #rand = random.randint(0,1000)
@@ -224,7 +196,30 @@ def register(ssock:ssl.SSLSocket) -> Tuple:
         print(e.args)
     return nome
 
+def inicio(ssock):
+    print('''
+ ___ ____ _   _    _  _____ ___  
+|_ _/ ___| | | |  / \|_   _/ _ \ 
+ | | |   | |_| | / _ \ | || | | |
+ | | |___|  _  |/ ___ \| || |_| |
+|___\____|_| |_/_/   \_\_| \___/ ''')
+    resposta = input("\nBem-vindo ao iChato!\n" + 
+        "\n1 - Iniciar sessão" +
+        "\n2 - Registar Utilizador" +
+        "\n> ")
+    if resposta == "2":
+        nome = register(ssock)
+        print("Iniciar sessão: ")
+        login(ssock)
+    elif resposta == "1":
+        nome = login(ssock)
+    else:
+        print("Opção não reconhecida")
+        return inicio(ssock)
+    return nome
+
 def login(ssock:ssl.SSLSocket) -> str:
+
     counter = 0
     while True:
         if counter == 3:

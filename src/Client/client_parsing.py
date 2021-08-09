@@ -1,6 +1,18 @@
-from client_crypto import verify,decrypt_with_shared_key
-from client_connection import ssl, receive_hand_shake, send_hand_shake_to_group
-from cliente_grafico import *
+import ssl
+from client_crypto import verify,decrypt_with_shared_key, receive_hand_shake, send_hand_shake_to_group
+from cliente_grafico import titpre, AddListaAmigos, calculaEspacos, guardaMSG
+
+
+
+
+def receive_message(socket:ssl.SSLSocket,nome:str) -> None:
+        try:  
+            msg = socket.recv(3072)
+            parse_received(msg,nome,socket) if msg.decode() != "" else ""
+        except Exception as e:
+            print(e.args)
+
+
 def parse_received(msg:bytes,nome:str,ssock:ssl.SSLSocket) -> None:
     try:
         
@@ -69,3 +81,4 @@ def send_to_buffer(msg:str):
     if titpre != "Global Chat":
         AddListaAmigos(calculaEspacos(20,"Global Chat"), 1, True)
     guardaMSG("Global Chat", msg)
+
