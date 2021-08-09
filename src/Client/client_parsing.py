@@ -2,9 +2,6 @@ import ssl
 from client_crypto import verify,decrypt_with_shared_key, receive_hand_shake, send_hand_shake_to_group
 from cliente_grafico import titpre, AddListaAmigos, calculaEspacos, guardaMSG
 
-
-
-
 def receive_message(socket:ssl.SSLSocket,nome:str) -> None:
         try:  
             msg = socket.recv(3072)
