@@ -116,7 +116,7 @@ def decrypt(message:bytes,user:str) -> str:
     ).decode()
 
 
-
+# Produz uma chave comum para conversas privadas
 def make_key(from_user,group_name):
     global common_shared
     shared_key = Fernet.generate_key()
@@ -127,7 +127,8 @@ def make_key(from_user,group_name):
             f.close()
     common_shared = shared_key
     return signatures
-
+    
+# Guarda as chaves do utilizador no sistema 
 def save_keys(message:str,user:str):
     with open("debug.txt","w") as f:
         n_messages = message.split("\n")
