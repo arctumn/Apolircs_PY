@@ -7,6 +7,7 @@ from cliente_grafico import *
 from client_parsing import parse_received
 from client_crypto import common_shared ,encrypt, verify, decrypt, make_key, sign, encrypt_with_shared_key, gen_passwd, save_keys
 from client_coloring import *
+
 class Receiving(threading.Thread):
     def __init__(self, *args):
         threading.Thread.__init__(self)

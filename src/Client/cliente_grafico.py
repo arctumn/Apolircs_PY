@@ -1,9 +1,10 @@
 import random
 import queue
 import os
+import time
 
 from client_coloring import * #coloring variables
-from client_connection import  time, register,login
+from client_connection import register,login
 pm_flag = False
 
 def menuPM(nome):
