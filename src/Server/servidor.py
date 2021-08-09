@@ -4,6 +4,8 @@ import socket
 from client import client
 from database import *
 from private_message import *
+from sys import argv
+
 #import functools as fun
 #import asyncio
 host = '192.168.2.26'
@@ -130,10 +132,11 @@ def parseInput(message:str,client_socket:SSLSocket) -> bool:
     return True
     
 # Main function to receive the clients connection
-def receive() -> None:
+def receive(certificate_file,private_key) -> None:
     #print('Server is running and listening ...')
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain('/etc/letsencrypt/live/apolircs.asuscomm.com/fullchain.pem', '/etc/letsencrypt/live/apolircs.asuscomm.com/privkey.pem')
+    context.load_cert_chain(certificate_file,private_key)
+    #context.load_cert_chain('/etc/letsencrypt/live/apolircs.asuscomm.com/fullchain.pem', '/etc/letsencrypt/live/apolircs.asuscomm.com/privkey.pem')
     thread:threading.Thread
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -150,6 +153,31 @@ def receive() -> None:
 
         
 
+def start() -> None:
+    # Tries to find if there is already an input for the server
+    # As it allows the user to startit in 2 different ways
+    # So it can be automatized via another script or
+    # started manually
+    if len(argv) < 3:
+        certificate = input("certificate file path\n")
+        key = input("key path\n")
+        try:
+            receive(certificate,key)
+            
+        except Exception as e:
+            print("Error while loading a file")
+            print("Check if the path is correct")
+            print(f"Exception: {e.args}")
+    else:
+        try:
+            receive(argv[1],argv[2])
+            
+        except Exception as e:
+            print("Error while loading a file")
+            print("Check if the path is correct")
+            print(f"Exception: {e.args}")
 
 if __name__ == "__main__":
-    receive()
+    print(argv)
+    start()
+    

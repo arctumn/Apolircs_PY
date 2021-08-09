@@ -2,7 +2,7 @@ from client import client
 import threading
 grupos = []
 
-def hand_shake_point_2_point(username_of_the_users:list[str],client_send:client,clients:list,group_name:str,signature:str):
+def hand_shake_point_2_point(username_of_the_users:list,client_send:client,clients:list,group_name:str,signature:str):
     lock = threading.Lock()
     lock.acquire()
 
@@ -36,7 +36,7 @@ def extract_grpup(grupos,nome):
         if a == nome:
             return b
 
-def privateMessaging(group_name:str,message:str,clients:list[client],client_sender:client,sig:str) -> None:
+def privateMessaging(group_name:str,message:str,clients:list,client_sender:client,sig:str) -> None:
     try:
         username_of_the_users = extract_grpup(grupos,group_name)
         #print(username_of_the_users)
@@ -53,7 +53,7 @@ def privateMessaging(group_name:str,message:str,clients:list[client],client_send
     except Exception as e:
         print(e.args)
 
-def talk(message:str,client_sender:client,clients:list[client]) -> None:
+def talk(message:str,client_sender:client,clients:list) -> None:
     group_name, message,sig = message.split(".__.")
 
     privateMessaging(group_name,message,clients,client_sender,sig)
